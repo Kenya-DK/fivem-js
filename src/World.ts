@@ -749,7 +749,7 @@ export abstract class World {
 
     return peds;
   }
-
+  
   /**
    * Get all [[`Vehicle`]] entities in your own scope.
    *

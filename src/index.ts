@@ -10,6 +10,7 @@ export { ParticleEffect } from './ParticleEffect';
 export { ParticleEffectAsset } from './ParticleEffectAsset';
 export { RaycastResult } from './Raycast';
 export { RelationshipGroup } from './RelationshipGroup';
+export { PolyZone } from './PolyZone';
 
 // Lets export all from folders
 export * from './models';

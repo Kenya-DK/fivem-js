@@ -16,3 +16,4 @@ export { VehicleWheel } from './VehicleWheel';
 export { VehicleWheelCollection } from './VehicleWheelCollection';
 export { VehicleWindow } from './VehicleWindow';
 export { VehicleWindowCollection } from './VehicleWindowCollection';
+export { PolyZoneOptions } from './PolyZoneOptions';
