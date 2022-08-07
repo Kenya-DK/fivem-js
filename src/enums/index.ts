@@ -1,52 +1,40 @@
-export { Alignment } from './Alignment';
-export { AudioFlag } from './AudioFlag';
-export { BadgeStyle } from './BadgeStyle';
-export { BlipColor, BlipSprite } from './Blip';
-export { Bone } from './Bone';
-export { CameraShake } from './CameraShake';
-export { CheckboxStyle } from './CheckboxStyle';
-export { CheckpointCustomIconStyle, CheckpointIcon } from './Checkpoint';
-export { CloudHat } from './CloudHat';
-export { Control } from './Control';
-export { CursorSprite } from './CursorSprite';
-export { DrivingStyle, VehicleDrivingFlags } from './Driving';
-export { ExplosionType } from './ExplosionType';
-export { Font } from './Font';
-export { ForceType } from './ForceType';
-export { Gender } from './Gender';
-export { HelmetType } from './HelmetType';
-export { HudColor } from './HudColor';
-export { HudComponent } from './HudComponent';
-export { InputMode } from './InputMode';
-export { IntersectOptions } from './IntersectOptions';
-export { InvertAxis, InvertAxisFlags } from './InvertAxis';
-export { Language } from './Language';
-export { LoadingSpinnerType } from './LoadingSpinnerType';
-export { MarkerType } from './MarkerType';
-export { NotificationType } from './NotificationType';
-export { ParachuteLandingType, ParachuteState } from './Parachute';
-export { RadioStation } from './RadioStation';
-export { RagdollType } from './RagdollType';
-export { Relationship } from './Relationship';
-export { RopeType } from './RopeType';
-export { ScreenEffect } from './ScreenEffect';
-export { SpeechModifier } from './SpeechModifier';
-export {
-  VehicleClass,
-  VehicleColor,
-  VehicleLandingGearState,
-  VehicleLockStatus,
-  VehicleNeonLight,
-  VehicleRoofState,
-  VehicleSeat,
-  VehicleWindowTint,
-  VehicleWindowIndex,
-  VehicleModType,
-  VehicleToggleModType,
-  VehiclePaintType,
-  VehicleDoorIndex,
-  VehicleWheelType,
-  VehicleWheelIndex,
-} from './Vehicle';
-export { Weather } from './Weather';
-export { ZoneID } from './ZoneID';
+export * from "./Alignment";
+export * from "./Animation";
+export * from "./AudioFlag";
+export * from "./BadgeStyle";
+export * from "./Blip";
+export * from "./Bone";
+export * from "./CameraShake";
+export * from "./CheckboxStyle";
+export * from "./Checkpoint";
+export * from "./CloudHat";
+export * from "./Control";
+export * from "./CursorSprite";
+export * from "./Driving";
+export * from "./ExplosionType";
+export * from "./Font";
+export * from "./ForceType";
+export * from "./Gender";
+export * from "./HelmetType";
+export * from "./HudColor";
+export * from "./HudComponent";
+export * from "./index";
+export * from "./InputMode";
+export * from "./IntersectOptions";
+export * from "./InvertAxis";
+export * from "./Language";
+export * from "./LoadingSpinnerType";
+export * from "./MarkerType";
+export * from "./NotificationType";
+export * from "./Parachute";
+export * from "./Ped";
+export * from "./RadioStation";
+export * from "./RagdollType";
+export * from "./Relationship";
+export * from "./RopeType";
+export * from "./ScreenEffect";
+export * from "./SpeechModifier";
+export * from "./Vehicle";
+export * from "./Weapon";
+export * from "./Weather";
+export * from "./ZoneID";
