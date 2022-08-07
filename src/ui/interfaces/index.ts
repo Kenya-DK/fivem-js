@@ -1,1 +1,1 @@
-export { IDrawable } from './IDrawable';
+export * from './IDrawable';
