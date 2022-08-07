@@ -5,16 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "eslint . --ext .ts",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run lint",
-    "preversion": "npm run lint",
-    "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags",
-    "typedoc": "typedoc",
-    "docs": "npm run typedoc -- --options typedoc.json"
+    "build": "tsc"
   },
   "files": [
     "lib/**/*"
@@ -22,13 +13,6 @@
   "author": "Remco Troost <d0p3t>",
   "license": "MIT",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
-    "eslint": "^8.21.0",
-    "eslint-config-prettier": "^8.5.0",
-    "prettier": "^2.7.1",
-    "typedoc": "^0.23.10",
-    "typedoc-fivemjs-theme": "^0.2.7",
     "typescript": "^4.7.4"
   },
   "dependencies": {
