@@ -3,6 +3,7 @@ import { Control, InputMode, Language, RadioStation } from './enums';
 import { Ped, Player, Prop, Vehicle } from './models';
 
 export abstract class Game {
+  private static cachedHashes: Map<string, number> = new Map();
   /**
    * Calculate the Jenkins One At A Time (joaat) has from the given string.
    *
@@ -12,7 +13,14 @@ export abstract class Game {
     if (typeof input === 'undefined') {
       return 0;
     }
-    return GetHashKey(input);
+
+    if (this.cachedHashes.has(input))
+      return this.cachedHashes.get(input);
+
+    const hash = GetHashKey(input);
+    this.cachedHashes.set(input, hash);
+
+    return hash;
   }
 
   /**
