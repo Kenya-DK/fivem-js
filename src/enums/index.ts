@@ -1,4 +1,5 @@
 export { Alignment } from './Alignment';
+export { AnimationFlags } from './Animation';
 export { AudioFlag } from './AudioFlag';
 export { BadgeStyle } from './BadgeStyle';
 export { BlipColor, BlipSprite } from './Blip';
@@ -32,21 +33,12 @@ export { RopeType } from './RopeType';
 export { ScreenEffect } from './ScreenEffect';
 export { SpeechModifier } from './SpeechModifier';
 export {
-  VehicleClass,
-  VehicleColor,
-  VehicleLandingGearState,
-  VehicleLockStatus,
-  VehicleNeonLight,
-  VehicleRoofState,
-  VehicleSeat,
-  VehicleWindowTint,
-  VehicleWindowIndex,
-  VehicleModType,
-  VehicleToggleModType,
-  VehiclePaintType,
-  VehicleDoorIndex,
-  VehicleWheelType,
-  VehicleWheelIndex,
+  LeaveVehicleFlags, VehicleClass, LicensePlateStyle, LicensePlateType,
+  VehicleColor, VehicleDoorIndex, VehicleLandingGearState,
+  VehicleLockStatus, VehicleModType, VehicleNeonLight, VehiclePaintType, VehicleRoofState,
+  VehicleSeat, VehicleToggleModType, VehicleWheelIndex, VehicleWheelType, VehicleWindowIndex, VehicleWindowTint
 } from './Vehicle';
+export { FiringPattern } from './Weapon';
 export { Weather } from './Weather';
 export { ZoneID } from './ZoneID';
+
