@@ -62,6 +62,10 @@ export class Ped extends Entity {
     super.Health = amount + 100;
   }
 
+  public set Heading(heading: number) {
+    SetEntityHeading(this.handle, heading);
+  }
+
   public get MaxHealth(): number {
     return super.MaxHealth - 100;
   }
@@ -502,9 +506,10 @@ export class Ped extends Entity {
   }
 
   public getLastWeaponImpactPosition(): Vector3 {
-    const position = GetPedLastWeaponImpactCoord(this.handle);
+    const [foundCoords, coords] = GetPedLastWeaponImpactCoord(this.handle);
+    if (!foundCoords) return null;
 
-    return new Vector3(position[0], position[1][0], position[1][1]); // Does this work?
+    return new Vector3(coords[0], coords[1], coords[3]);
   }
 
   public get CanRagdoll(): boolean {
@@ -552,8 +557,13 @@ export class Ped extends Entity {
     SetPedResetFlag(this.handle, flagId, true);
   }
 
-  public clone(heading: number): Ped {
-    return new Ped(ClonePed(this.handle, heading, false, false));
+  public clone(heading?: number): Ped {
+    let ped = new Ped(ClonePed(this.handle, false, false, false));
+
+    if (heading !== undefined)
+      ped.Heading = heading;
+
+    return;
   }
 
   public exists(ped: Ped = null): boolean {

@@ -1,6 +1,6 @@
 import { Audio } from '../Audio';
 import { HudColor, NotificationType } from '../enums';
-import { Color, PointF, Size, stringToArray, Vector3 } from '../utils';
+import { Color, Point, Size, stringToArray, Vector3 } from '../utils';
 import { Notification } from './';
 
 export abstract class Screen {
@@ -103,12 +103,13 @@ export abstract class Screen {
     return new Notification(DrawNotification(blinking, showInBrief));
   }
 
-  public static worldToScreen(position: Vector3, scaleWidth = false): PointF {
-    const coords = GetScreenCoordFromWorldCoord(position.x, position.y, position.z);
-    return new PointF(
+  public static worldToScreen(position: Vector3, scaleWidth = false): Point {
+    const [foundCoords, coords] = GetScreenCoordFromWorldCoord(position.x, position.y, position.z);
+    if (!foundCoords) return null;
+
+    return new Point(
       coords[0] * (scaleWidth ? this.ScaledWidth : this.Width),
-      coords[1] * this.Height,
-      coords[2],
+      coords[1] * this.Height
     );
   }
 }
