@@ -12,6 +12,13 @@ export enum LicensePlateStyle {
   NorthYankton = 5,
 }
 
+export enum LeaveVehicleFlags {
+  None = 0,
+  WarpOut = 16,
+  LeaveDoorOpen = 256,
+  BailOut = 4096
+}
+
 export enum LicensePlateType {
   FrontAndRearPlates,
   FrontPlate,
