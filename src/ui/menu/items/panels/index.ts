@@ -1,7 +1,6 @@
-export * from './AbstractUIMenuPanel';
-export * from './UIMenuColorPanel';
-export * from './UIMenuGridPanel';
-export * from './UIMenuPercentagePanel';
-export * from './UIMenuStatisticsPanel';
-export * from './UIMenuStatisticsPanelItem';
-
+export { AbstractUIMenuPanel } from './AbstractUIMenuPanel';
+export { UIMenuGridPanel } from './UIMenuGridPanel';
+export { UIMenuColorPanel } from './UIMenuColorPanel';
+export { UIMenuPercentagePanel } from './UIMenuPercentagePanel';
+export { UIMenuStatisticsPanel } from './UIMenuStatisticsPanel';
+export { UIMenuStatisticsPanelItem } from './UIMenuStatisticsPanelItem';
