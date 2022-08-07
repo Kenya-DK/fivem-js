@@ -1,13 +1,14 @@
 import { Vector3 } from '../';
 import { DrivingStyle, HelmetType, RagdollType, SpeechModifier, VehicleSeat } from '../enums';
 import { WeaponHash } from '../hashes';
+import { Tasks } from '../Tasks';
 import { Entity, PedBoneCollection, Vehicle } from './';
 
 export class Ped extends Entity {
   public static exists(ped: Ped): boolean {
     return typeof ped !== 'undefined' && ped.exists();
   }
-
+  private task: Tasks;
   private pedBones: PedBoneCollection;
 
   private readonly speechModifierNames: string[] = [
@@ -54,8 +55,19 @@ export class Ped extends Entity {
     super(handle);
   }
 
+  public get Task() {
+    if (this.task == undefined)
+      this.task = new Tasks(this);
+
+    return this.task;
+  }
+
   public get Health(): number {
     return super.Health - 100;
+  }
+
+  public set BlockPermanentEvents(state: boolean) {
+    SetBlockingOfNonTemporaryEvents(this.handle, state);
   }
 
   public set Health(amount: number) {

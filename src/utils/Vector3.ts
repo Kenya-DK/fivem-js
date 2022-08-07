@@ -53,6 +53,10 @@ export class Vector3 implements Vec3 {
     return new Vector3(x, y, z);
   }
 
+  public static get zero() {
+    return new Vector3(0, 0, 0);
+  }
+
   public static normalize(v: Vector3): Vector3 {
     return Vector3.divide(v, v.Length);
   }
