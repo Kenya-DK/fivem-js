@@ -27,7 +27,6 @@ export * from "./LoadingSpinnerType";
 export * from "./MarkerType";
 export * from "./NotificationType";
 export * from "./Parachute";
-export * from "./Ped";
 export * from "./RadioStation";
 export * from "./RagdollType";
 export * from "./Relationship";
