@@ -1,12 +1,12 @@
-import { Color } from ".."
-import { PolyZoneOptions } from "../models"
-import { PolyZone } from "../PolyZone"
+import { Color, Entity } from ".."
+import { PolyZoneOptions } from "../enums"
 import { World } from "../World"
+import { BasePoly, EntityZone } from "../zones"
 import { Delay } from "./Delay"
 import { Vector2 } from "./Vector2"
 import { Vector3 } from "./Vector3"
 
-export const DrawWall = (p1: Vector3, p2: Vector3, minZ: number, maxZ: number, color: Color) => {
+export const DrawWall = (p1: Vector2, p2: Vector2, minZ: number, maxZ: number, color: Color) => {
   const bottomLeft = new Vector3(p1.x, p1.y, minZ)
   const topLeft = new Vector3(p1.x, p1.y, maxZ)
   const bottomRight = new Vector3(p2.x, p2.y, minZ)
@@ -17,10 +17,18 @@ export const DrawWall = (p1: Vector3, p2: Vector3, minZ: number, maxZ: number, c
   World.drawPoly(bottomRight, topRight, topLeft, color);
   World.drawPoly(bottomRight, topLeft, bottomLeft, color);
 }
-export const DrawGrid = (poly: PolyZone) => {
+export const DrawGrid = (poly: BasePoly) => {
 
 }
-export const PointInPoly = (point: Vector3, poly: PolyZone): boolean => {
+export const CalculatePolygonArea = (points: Vector3[]) => {
+  const det2 = (i: number, j: number) => {
+    return points[i].x * points[j].y - points[j].x * points[i].y
+  }
+  let sum = points.length > 2 && det2((points.length - 1), 0) || 0
+  for (let i = 0; i < points.length - 1; i++) { sum += det2(i, i + 1) }
+  return Math.abs(0.5 * sum)
+}
+export const PointInPoly = (point: Vector3, poly: BasePoly): boolean => {
   const x = point.x
   const y = point.y
   const min = poly.min
@@ -85,8 +93,9 @@ export const WindingNumber = (point: Vector2, points: Vector2[]) => {
   let wn = 0
   for (let index = 0; index < points.length - 2; index++) {
     wn = Wn_inner_loop(points[index], points[index + 1], point, wn)
+    
   }
-  wn = Wn_inner_loop(points[points.length - 1], points[1], point, wn)
+  wn = Wn_inner_loop(points[points.length - 1], points[0], point, wn)
   return wn != 0
 }
 export const Wn_inner_loop = (p0: Vector2, p1: Vector2, p2: Vector2, wn: number) => {
@@ -104,7 +113,7 @@ export const Wn_inner_loop = (p0: Vector2, p1: Vector2, p2: Vector2, wn: number)
   }
   return wn
 }
-export const CalculateGridCellPoints = (cellX: number, cellY: number, poly: PolyZone) => {
+export const CalculateGridCellPoints = (cellX: number, cellY: number, poly: BasePoly) => {
   const gridCellWidth = poly.gridCellWidth
   const gridCellHeight = poly.gridCellHeight
   const min = poly.min
@@ -118,9 +127,9 @@ export const CalculateGridCellPoints = (cellX: number, cellY: number, poly: Poly
     new Vector2(x, y)
   ]
 }
-export const IsGridCellInsidePoly = (cellX: number, cellY: number, poly: PolyZone) => {
+export const IsGridCellInsidePoly = (cellX: number, cellY: number, poly: BasePoly) => {
   const gridCellPoints = CalculateGridCellPoints(cellX, cellY, poly)
-  
+
   let polyPoints = [...poly.points]
   polyPoints[polyPoints.length - 1] = polyPoints[0]
   let isOnePointInPoly = false;
@@ -153,10 +162,10 @@ export const IsGridCellInsidePoly = (cellX: number, cellY: number, poly: PolyZon
   }
   return true
 }
-export const CalculateLinesForDrawingGrid = (poly: PolyZone) => {
+export const CalculateLinesForDrawingGrid = (poly: BasePoly) => {
   console.log('CalculateLinesForDrawingGrid');
 }
-export const CreateGrid = async (poly: PolyZone, options: PolyZoneOptions) => {
+export const CreateGrid = async (poly: BasePoly, options: PolyZoneOptions) => {
   poly.gridArea = 0.0
   poly.gridCellWidth = poly.size.x / poly.gridDivisions
   poly.gridCellHeight = poly.size.y / poly.gridDivisions
@@ -176,46 +185,46 @@ export const CreateGrid = async (poly: PolyZone, options: PolyZoneOptions) => {
   poly.grid = isInside
   poly.gridCoverage = poly.gridArea / poly.area
 }
-export const CalculatePoly = (poly: PolyZone, options: PolyZoneOptions) => {
+export const CalculatePoly = (poly: BasePoly, options: PolyZoneOptions) => {
   if (!options.min || !options.max || !options.size || !options.center || !options.area) {
-    let [minX, minY] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
-    let [maxX, maxY] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
+    let [minX, minY] = [Number.MAX_VALUE, Number.MAX_VALUE]
+    let [maxX, maxY] = [Number.MIN_VALUE, Number.MIN_VALUE]
     poly.points.forEach(point => {
       minX = Math.min(minX, point.x)
       minY = Math.min(minY, point.y)
       maxX = Math.max(maxX, point.x)
       maxY = Math.max(maxY, point.y)
     });
-    poly.min = new Vector2(minX, minY)
-    poly.max = new Vector2(maxX, maxY)
-    poly.size = poly.max.subtract(poly.min)
-    console.log(minX, minY)
-    console.log(maxX, maxY)
-    console.log(poly.size);
 
-    // this.center = this.max.subtract(this.min) / 2
+    poly.min = new Vector2(minX, minY);
+    poly.max = new Vector2(maxX, maxY);
+    poly.size = poly.max.subtract(poly.min);
+
+    poly.center = Vector2.divide(Vector2.add(poly.max, poly.min), 2);
+
+    poly.area = CalculatePolygonArea(poly.points)
   }
 
-  // this.boundingRadius = Math.sqrt(this.size.y * this.size.y + this.size.x * this.size.x) / 2
+  poly.boundingRadius = Math.sqrt(poly.size.y * poly.size.y + poly.size.x * poly.size.x) / 2
 
-  // if (this.useGrid && !this.lazyGrid) {
-  //   if (options.debugGrid) {
-  //     this.gridXPoints = []
-  //     this.gridYPoints = []
-  //     this.lines = []
-  //   }
-  //   this.createGrid(options)
-  // } else if (this.useGrid) {
-  //   const isInside: Array<Array<boolean>> = [[]]
-  //   for (let index = 0; index < this.gridDivisions; index++)
-  //     isInside[index] = [];
-  //   this.grid = isInside
-  //   this.gridCellWidth = this.size.x / this.gridDivisions
-  //   this.gridCellHeight = this.size.y / this.gridDivisions
-  // }
+  if (poly.useGrid && !poly.lazyGrid) {
+    if (options.debugGrid) {
+      poly.gridXPoints = []
+      poly.gridYPoints = []
+      poly.lines = []
+    }
+    CreateGrid(poly, options)
+  } else if (poly.useGrid) {
+    const isInside: Array<Array<boolean>> = [[]]
+    for (let index = 0; index < poly.gridDivisions; index++)
+      isInside[index] = [];
+    poly.grid = isInside
+    poly.gridCellWidth = poly.size.x / poly.gridDivisions
+    poly.gridCellHeight = poly.size.y / poly.gridDivisions
+  }
 }
-export const InitDebug = (poly: PolyZone, options: PolyZoneOptions) => {
-  if (!options.debugPoly && !options.debugGrid) return
+export const InitDebug = (poly: BasePoly, options: PolyZoneOptions) => {
+  if (!options.debugPoly && !options.debugGrid && poly.type!= "Entity") return
 
   setTick(() => {
     if (!poly.destroyed) {
@@ -224,4 +233,60 @@ export const InitDebug = (poly: PolyZone, options: PolyZoneOptions) => {
         DrawGrid(poly)
     }
   })
+}
+
+export const BoxZoneCalculateMinAndMaxZ = (minZ: number, maxZ: number, scaleZ: number[], offsetZ: number[]) => {
+  const [minScaleZ, maxScaleZ, minOffsetZ, maxOffsetZ] = [scaleZ[0] || 1.0, scaleZ[1] || 1.0, offsetZ[0] || 0.0, offsetZ[1] || 0.0]
+  if ((minZ == undefined && maxZ == undefined) || (minScaleZ == 1.0 && maxScaleZ == 1.0 && minOffsetZ == 0.0 && maxOffsetZ == 0.0))
+    return [minZ, maxZ]
+
+  if (minScaleZ != 1.0 || maxScaleZ != 1.0) {
+
+    if (minZ != undefined && maxZ != undefined) {
+
+      const halfHeight = (maxZ - minZ) / 2
+      const centerZ = minZ + halfHeight
+      minZ = centerZ - halfHeight * minScaleZ
+      maxZ = centerZ + halfHeight * maxScaleZ
+    }
+    else
+      console.log(`[PolyZone] Warning: The minZ/maxZ of a BoxZone can only be scaled if both minZ and maxZ are non-nil (minZ=${minZ}, maxZ=${maxZ})`)
+  }
+  if (minZ) minZ = minZ - minOffsetZ
+  if (maxZ) maxZ = maxZ + maxOffsetZ
+  return [minZ, maxZ]
+}
+
+export const EntityCalculateMinAndMaxZ = (entity: Entity, dimensions: [Vector3, Vector3], scaleZ: number[], offsetZ: number[]) => {
+  const [min, max] = [dimensions[0], dimensions[1]]
+  const [minX, minY, minZ, maxX, maxY, maxZ] = [min.x, min.y, min.z, max.x, max.y, max.z]
+
+  // Bottom vertices
+  const p1 = GetOffsetFromEntityInWorldCoords(entity.Handle, minX, minY, minZ)[2]
+  const p2 = GetOffsetFromEntityInWorldCoords(entity.Handle, maxX, minY, minZ)[2]
+  const p3 = GetOffsetFromEntityInWorldCoords(entity.Handle, maxX, maxY, minZ)[2]
+  const p4 = GetOffsetFromEntityInWorldCoords(entity.Handle, minX, maxY, minZ)[2]
+
+  // Top vertices[2]
+  const p5 = GetOffsetFromEntityInWorldCoords(entity.Handle, minX, minY, maxZ)[2]
+  const p6 = GetOffsetFromEntityInWorldCoords(entity.Handle, maxX, minY, maxZ)[2]
+  const p7 = GetOffsetFromEntityInWorldCoords(entity.Handle, maxX, maxY, maxZ)[2]
+  const p8 = GetOffsetFromEntityInWorldCoords(entity.Handle, minX, maxY, maxZ)[2]
+
+  const entityMinZ = Math.min(p1, p2, p3, p4, p5, p6, p7, p8)
+  const entityMaxZ = Math.max(p1, p2, p3, p4, p5, p6, p7, p8)
+
+  return BoxZoneCalculateMinAndMaxZ(entityMinZ, entityMaxZ, scaleZ, offsetZ)
+}
+
+export const UpdateOffsets = (entity: Entity, zone: EntityZone) => {
+  const pos = entity.Position;
+  const rot = entity.ForwardDegrees;
+  zone.offsetPos = pos.toVector2().subtract(zone.startPos)
+  zone.offsetRot = rot - 90.0
+  if (zone.useZ) {
+    const [minZ, maxZ] = EntityCalculateMinAndMaxZ(entity, zone.dimensions, zone.scaleZ, zone.offsetZ);
+
+    [zone.minZ, zone.maxZ] = [minZ, maxZ]
+  }
 }

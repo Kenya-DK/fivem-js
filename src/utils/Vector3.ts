@@ -1,3 +1,5 @@
+import { Vector2 } from "./Vector2";
+
 // Source: https://raw.githubusercontent.com/you21979/typescript-vector/master/vector3.ts
 export interface Vec3 {
   x: number;
@@ -82,6 +84,22 @@ export class Vector3 implements Vec3 {
    */
   public distance(v: Vec3): number {
     return Math.sqrt(this.distanceSquared(v));
+  }
+  /**
+   * The distance between two Vectors.
+   *
+   * @param v Vector3 to find distance between.
+   * @returns Distance between this and another vector.
+   */
+  public distance2D(v: Vec3): number {
+    const v1 = new Vector2(this.x, this.y);
+    const v2 = new Vector2(v.x, v.y);
+    return Math.sqrt(v1.distanceSquared(v2));
+  }
+
+
+  public toVector2(): Vector2 {
+    return new Vector2(this.x, this.y);
   }
 
   public get normalize(): Vector3 {

@@ -3,7 +3,7 @@ import { ForceType } from '../enums';
 import { Game } from '../Game';
 import { WeaponHash } from '../hashes';
 import { Model } from '../Model';
-import { Quaternion, Vector3 } from '../utils';
+import { radiansToDegrees, Quaternion, Vector3, toFixed } from '../utils';
 import { EntityBoneCollection, Ped, Prop, Vehicle } from './';
 import { EntityBone } from './EntityBone';
 
@@ -86,6 +86,11 @@ export class Entity {
     return new Vector3(rotation[0], rotation[1], rotation[2]);
   }
 
+  public get ForwardDegrees(): number {
+    const rotation = GetEntityForwardVector(this.handle);
+    const atan2 = toFixed(Math.atan2(rotation[1], rotation[0]), 14);
+    return radiansToDegrees(atan2);
+  }
   public set Rotation(rotation: Vector3) {
     SetEntityRotation(this.handle, rotation.x, rotation.y, rotation.z, 2, true);
   }

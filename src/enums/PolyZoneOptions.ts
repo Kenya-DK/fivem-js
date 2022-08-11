@@ -8,6 +8,7 @@ export interface PolyZoneOptions {
   gridDivisions?: number,
   debugGrid?: boolean,
   useGrid?: boolean,
+  useZ?: boolean // CircleZone
   lazyGrid?: boolean
   debugPoly?: boolean
   debugColors?: DebugColors
@@ -18,6 +19,15 @@ export interface PolyZoneOptions {
   max?: Vector2;
   size?: Vector2;
   area?: number,
+}
+
+export interface CircleOptions extends Omit<PolyZoneOptions, "debugColors"> {
+  debugColors?: [number, number, number]
+}
+export interface BoxOptions extends PolyZoneOptions {
+  scale?: [number, number, number] | [number, number, number, number, number, number];
+  offset?: [number, number, number] | [number, number, number, number, number, number];
+  heading?: number;
 }
 
 export interface DebugColors {

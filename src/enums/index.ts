@@ -31,6 +31,7 @@ export { Relationship } from './Relationship';
 export { RopeType } from './RopeType';
 export { ScreenEffect } from './ScreenEffect';
 export { SpeechModifier } from './SpeechModifier';
+export { CircleOptions, PolyZoneOptions,BoxOptions, DebugColors } from './PolyZoneOptions';
 export {
   VehicleClass,
   VehicleColor,

@@ -195,6 +195,16 @@ export class Model {
   }
 
   /**
+   * Gets the model dimensions size.
+   *
+   * @returns This model dimensions [length, width].
+   */
+  public get DimensionMinMax(): [Vector3, Vector3] {
+    const [min, max] = GetModelDimensions(this.hash);
+    return [new Vector3(min[0], min[1], min[2]), new Vector3(max[0], max[1], max[2])];
+  }
+
+  /**
    * Request and load the model with a specified timeout. Advised timeout - 1000.
    *
    * @param timeout Maximum allowed time for model to load.
