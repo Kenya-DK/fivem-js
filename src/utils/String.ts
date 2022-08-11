@@ -35,5 +35,5 @@ export function measureString(
   scale?: number,
   screenWidth = Screen.ScaledWidth,
 ): number {
-  return this.measureStringWidthNoConvert(str, font, scale) * screenWidth;
+  return measureStringWidthNoConvert(str, font, scale) * screenWidth;
 }
