@@ -7,4 +7,5 @@ export { Point } from './Point';
 export { Color } from './Color';
 export { clamp, getRandomInt } from './Math';
 export { Size } from './Size';
+export { Delay } from './Delay';
 export { Quaternion } from './Quaternion';
