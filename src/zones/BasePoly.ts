@@ -1,5 +1,5 @@
 import { Color, Vector2, Vector3, Delay, CalculatePoly, DrawWall, InitDebug, PointInPoly } from "../utils";
-import { Player } from "../models";
+import { Player, Vehicle } from "../models";
 import { DebugColors, PolyZoneOptions } from "../enums";
 import { Game } from "../Game";
 import { World } from "../World";
@@ -33,14 +33,14 @@ export class BasePoly {
 
   public boundingRadius: number;
   public area: number;
-  public grid: Array<Array<boolean>>;
+  public grid: Array<{ [key: string]: boolean }>;
   public gridXPoints: Array<Array<boolean>>;
   public gridYPoints: Array<Array<boolean>>;
   public gridCellHeight: number;
   public gridCoverage: number;
   public gridCellWidth: number;
   public gridArea: number;
-  public lines: Array<Array<{ max: number, min: number }>>;
+  public lines: Array<{ max: Vector2, min: Vector2 }>;
   private events: Array<Function> = [];
   constructor(public points: Vector3[], public options?: PolyZoneOptions, public type?: string) {
     if (this.points.length < 3 && type == "Base") {
@@ -69,14 +69,16 @@ export class BasePoly {
     }
     this.debugPoly = options.debugPoly || false;
     this.debugGrid = options.debugGrid || false;
+    if (this.debugGrid) this.lazyGrid = false;
     this.data = options.data || {};
     CalculatePoly(this, options)
-    // this.isPolyZone = true,;
     InitDebug(this, options);
   }
 
   // Events
   public transformPoint(point: Vector3) {
+    const a4 = new Vehicle(1);
+    a4.Model.IsBoat
     // No point transform necessary for regular PolyZones, unlike zones like Entity Zones, whose points can be rotated and offset
     return point.toVector2();
   }
@@ -165,7 +167,6 @@ export class BasePoly {
   public setType(type: string) {
     this.type = type
   }
-
   public removeEvent(event: string) {
     if (this.events[event]) {
       removeEventListener(event, () => { })

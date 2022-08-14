@@ -1,3 +1,4 @@
+import { toFixed } from "..";
 import { Vector2 } from "./Vector2";
 
 // Source: https://raw.githubusercontent.com/you21979/typescript-vector/master/vector3.ts
@@ -59,12 +60,20 @@ export class Vector3 implements Vec3 {
     return Vector3.divide(v, v.Length);
   }
 
-  constructor(public x: number, public y: number, public z: number) {}
+  constructor(public x: number, public y: number, public z: number) { }
 
   public clone(): Vector3 {
     return new Vector3(this.x, this.y, this.z);
   }
-
+  /**
+     * Rounds each component of the Vector3 to the nearest integer value.
+     * 
+     * @param decimals The number of decimals to round to.
+     * @returns 
+     */
+  public round(decimals: number): Vector3 {
+    return new Vector3(toFixed(this.x, decimals), toFixed(this.y, decimals), toFixed(this.z, decimals));
+  }
   /**
    * The product of the Euclidean magnitudes of this and another Vector3.
    *

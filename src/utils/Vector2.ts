@@ -1,3 +1,5 @@
+import { toFixed } from "..";
+
 // Source: https://raw.githubusercontent.com/you21979/typescript-vector/master/Vector2.ts
 export interface Vec2 {
   x: number;
@@ -49,10 +51,20 @@ export class Vector2 implements Vec2 {
     return Vector2.divide(v, v.Length);
   }
 
-  constructor(public x: number, public y: number) {}
+  constructor(public x: number, public y: number) { }
 
   public clone(): Vector2 {
     return new Vector2(this.x, this.y);
+  }
+
+  /**
+   * Rounds each component of the Vector2 to the nearest integer value.
+   * 
+   * @param decimals The number of decimals to round to.
+   * @returns 
+   */
+  public round(decimals: number): Vector2 {
+    return new Vector2(toFixed(this.x, decimals), toFixed(this.y, decimals));
   }
 
   /**
