@@ -692,30 +692,36 @@ export abstract class World {
    * @returns Array of Props.
    */
   public static getAllProps(): Prop[] {
-    const props: Prop[] = [];
-
-    const [handle, entityHandle] = (FindFirstObject(null) as unknown) as [number, number];
-    let prop: Prop = Entity.fromHandle(entityHandle) as Prop;
-
-    if (prop !== undefined && prop !== null && prop.exists()) {
-      props.push(prop);
-    }
-
-    let findResult: [number | boolean, number] = [false, null];
-
-    do {
-      findResult = (FindNextObject(handle, null) as unknown) as [number | boolean, number];
-      if (findResult[0]) {
-        prop = Entity.fromHandle(findResult[1]) as Prop;
-        if (prop !== undefined && prop !== null && prop.exists()) {
-          props.push(prop);
-        }
-      }
-    } while (findResult[0]);
-
-    EndFindObject(handle);
-
+    const props: Prop[] = GetGamePool('CObject').map((handle: number) => {
+      return Entity.fromHandle(handle) as Prop
+    });
     return props;
+  }
+
+  /**
+ * Get closest player from a postion.
+ * 
+ * @param position The position search from.
+ * 
+ * @returns a array [Player, distance]
+ */
+  public static getClosestProp(position: Vector3): [Prop, number] {
+    let props = this.getAllProps();
+    props = props.filter(x => DoesEntityExist(x.Handle)).sort((a, b) => a.Position.distance(position) - b.Position.distance(position));
+    return [props[0], props[0]?.Position.distance(position) || -1];
+  }
+
+  /**
+   * Get props in a area.
+   * 
+   * @param position The position start from.
+   * @param radius The radius of the area.
+   * 
+   * @returns a array of props.
+   */
+  public static getPropsInArea(position: Vector3, radius: number): Prop[] {
+    let props = this.getAllProps();
+    return props.filter(x => DoesEntityExist(x.Handle) && x.Position.distance(position) < radius);
   }
 
   /**
@@ -724,29 +730,9 @@ export abstract class World {
    * @returns Array of Peds.
    */
   public static getAllPeds(): Ped[] {
-    const peds: Ped[] = [];
-
-    const [handle, entityHandle] = (FindFirstPed(null) as unknown) as [number, number];
-    let ped: Ped = Entity.fromHandle(entityHandle) as Ped;
-
-    if (ped !== undefined && ped !== null && ped.exists()) {
-      peds.push(ped);
-    }
-
-    let findResult: [number | boolean, number] = [false, null];
-
-    do {
-      findResult = (FindNextPed(handle, null) as unknown) as [number | boolean, number];
-      if (findResult[0]) {
-        ped = Entity.fromHandle(findResult[1]) as Ped;
-        if (ped !== undefined && ped !== null && ped.exists()) {
-          peds.push(ped);
-        }
-      }
-    } while (findResult[0]);
-
-    EndFindPed(handle);
-
+    const peds: Ped[] = GetGamePool('CPed').map((handle: number) => {
+      return Entity.fromHandle(handle) as Ped
+    });
     return peds;
   }
 
@@ -756,30 +742,38 @@ export abstract class World {
    * @returns Array of Vehicles.
    */
   public static getAllVehicles(): Vehicle[] {
-    const vehicles: Vehicle[] = [];
-
-    const [handle, entityHandle] = (FindFirstVehicle(null) as unknown) as [number, number];
-    let vehicle: Vehicle = Entity.fromHandle(entityHandle) as Vehicle;
-
-    if (vehicle !== undefined && vehicle !== null && vehicle.exists()) {
-      vehicles.push(vehicle);
-    }
-
-    let findResult: [number | boolean, number] = [false, null];
-
-    do {
-      findResult = (FindNextVehicle(handle, null) as unknown) as [number | boolean, number];
-      if (findResult[0]) {
-        vehicle = Entity.fromHandle(findResult[1]) as Vehicle;
-        if (vehicle !== undefined && vehicle !== null && vehicle.exists()) {
-          vehicles.push(vehicle);
-        }
-      }
-    } while (findResult[0]);
-
-    EndFindVehicle(handle);
-
+    const vehicles: Vehicle[] = GetGamePool('CVehicle').map((handle: number) => {
+      return Entity.fromHandle(handle) as Vehicle
+    });
+    console.log(vehicles.length);
+    
     return vehicles;
+  }
+
+  /**
+ * Get closest vehicle from a postion.
+ * 
+ * @param position The position search from.
+ * 
+ * @returns a array [Vehicle, distance]
+ */
+  public static getClosestVehicle(position: Vector3): [Vehicle, number] {
+    let vehicles = this.getAllVehicles();
+    vehicles = vehicles.filter(x => DoesEntityExist(x.Handle)).sort((a, b) => a.Position.distance(position) - b.Position.distance(position));
+    return [vehicles[0], vehicles[0]?.Position.distance(position) || -1];
+  }
+
+  /**
+   * Get vehicles in a area.
+   * 
+   * @param position The position start from.
+   * @param radius The radius of the area.
+   * 
+   * @returns a array of vehicles.
+   */
+  public static getVehiclesInArea(position: Vector3, radius: number): Vehicle[] {
+    let vehicles = this.getAllVehicles();
+    return vehicles.filter(x => DoesEntityExist(x.Handle) && x.Position.distance(position) < radius);
   }
 
   private static currentCloudHat: CloudHat = CloudHat.Clear;

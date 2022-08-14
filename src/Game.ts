@@ -1,3 +1,4 @@
+import { Vector3 } from '.';
 import { Audio } from './Audio';
 import { Control, InputMode, Language, RadioStation } from './enums';
 import { Ped, Player, Prop, Vehicle } from './models';
@@ -95,6 +96,32 @@ export abstract class Game {
     for (const id of GetActivePlayers() as number[]) {
       yield new Player(id);
     }
+  }
+
+  /**
+   * Get closest player from a postion.
+   * 
+   * @param position The position search from.
+   * 
+   * @returns a array [Player, distance]
+   */
+  public static getClosestPlayer(position: Vector3): [Player, number] {
+    let players = Array.from(this.playerList());
+    players = players.filter(x => x.Handle != this.Player.Handle && DoesEntityExist(x.Handle)).sort((a, b) => a.Character.Position.distance(position) - b.Character.Position.distance(position));    
+    return [players[0], players[0]?.Character?.Position.distance(position) || -1];
+  }
+
+  /**
+   * Get players in a area.
+   * 
+   * @param position The position start from.
+   * @param radius The radius of the area.
+   * 
+   * @returns a array of players.
+   */
+   public static getPlayersInArea(position: Vector3, radius: number): Player[] {
+    let players = Array.from(this.playerList());
+    return players.filter(x => x.Handle != this.Player.Handle && DoesEntityExist(x.Handle) && x.Character.Position.distance(position) < radius);    
   }
 
   /**
